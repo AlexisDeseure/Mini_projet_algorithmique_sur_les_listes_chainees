@@ -10,11 +10,9 @@ int main()
     // ============= MENU UTILISATEUR ============= */
     char choix = '0';
 
-    printf("%d", strcmp("test","test"));
-
-
     while (choix != '9') {
-        printf("\n======================================");
+        system("cls");
+        printf("\n========== MENU UTILISATEUR ==========");
         printf("\n1. Creer un magasin");
         printf("\n2. Ajouter un rayon au magasin");
         printf("\n3. Ajouter un produit dans un rayon");
@@ -55,7 +53,7 @@ int main()
                break;
 
             case '9' :
-                printf("\n======== PROGRAMME TERMINE ========\n");
+                printf("\n========== PROGRAMME TERMINE ==========\n");
                 break;
 
             default :

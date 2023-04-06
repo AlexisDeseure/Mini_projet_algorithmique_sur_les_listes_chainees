@@ -68,19 +68,18 @@ T_Magasin *creerMagasin(char *nom) {
  ******************************** */
 int ajouterRayon(T_Magasin *magasin, char *nomRayon) {
     if (magasin != NULL) {
-        T_Rayon* rayon = creerRayon(nomRayon);
-        T_Rayon* rayonIntermediaire = magasin.liste_rayons;
+        T_Rayon *rayon = creerRayon(nomRayon);
+        T_Rayon *rayonIntermediaire = magasin->liste_rayons;
         if (rayonIntermediaire == NULL)
-            magasin.liste_rayons = rayon;
+            magasin->liste_rayons = rayon;
         else
-            rayonIntermediaire = rayonIntermediaire.suivant;
-        while (rayonIntermediaire.suivant != NULL)
-        {
+            rayonIntermediaire = rayonIntermediaire->suivant;
+        while (rayonIntermediaire->suivant != NULL) {
 
         }
 
-        magasin->liste_rayons = *creerRayon;
         return 1;
+    }
 }
 
 
