@@ -71,15 +71,15 @@ int ajouterRayon(T_Magasin *magasin, char *nomRayon) {
         T_Rayon *rayon = creerRayon(nomRayon);
         T_Rayon *rayonIntermediaire = magasin->liste_rayons;
         if (rayonIntermediaire == NULL) {
-            //cas où le magasion n'a pas de rayon
+            // cas où le magasion n'a pas de rayon
             magasin->liste_rayons = rayon;
-            return 0;
+            return 1;
         }
         else {
-            //cas où le magasin a au moins 1 rayon
+            // cas où le magasin a au moins 1 rayon
             int cmp = strcmp(rayon->nom_rayon, rayonIntermediaire->nom_rayon);
-            if (cmp == 0){
-                //cas où le premier rayon est identique à celui que l'on souhaite ajouter
+            if (!cmp){
+                // cas où le premier rayon est identique à celui que l'on souhaite ajouter
                 return 0;
             }
             else if (cmp < 0){
@@ -89,14 +89,14 @@ int ajouterRayon(T_Magasin *magasin, char *nomRayon) {
                 return 1;
             }
             else{
-                //cas général (après le premier rayon du magasin)
+                // cas général (après le premier rayon du magasin)
                 while ((rayonIntermediaire->suivant != NULL) &&
                        ((cmp = strcmp(rayon->nom_rayon, rayonIntermediaire->suivant->nom_rayon)) >= 0)) {
-                    rayonIntermediaire = rayonIntermediaire->suivant;
                     if (!cmp){
-                        //cas où il existe un rayon dont le nom est identique (autre que le premier car vérification déjà faite)
+                        // cas où il existe un rayon dont le nom est identique (autre que le premier car vérification déjà faite)
                         return 0;
                     }
+                    rayonIntermediaire = rayonIntermediaire->suivant;
                 }
                 rayon->suivant = rayonIntermediaire->suivant;
                 rayonIntermediaire->suivant = rayon;
@@ -104,7 +104,7 @@ int ajouterRayon(T_Magasin *magasin, char *nomRayon) {
             }
         }
     }
-    //Si le magasin n'existe pas, on ne fait rien
+    // Si le magasin n'existe pas, on ne fait rien
     return 0;
 }
 
@@ -114,8 +114,59 @@ int ajouterRayon(T_Magasin *magasin, char *nomRayon) {
  * Ajout d'un produit dans un rayon
  ******************************** */
 int ajouterProduit(T_Rayon *rayon,char *designation, float prix, int quantite) {
-    // TODO
-    return 1;
+    if (rayon != NULL) {
+        T_Produit *produit = creerProduit(designation, prix, quantite);
+        T_Produit *produitIntermediaire = rayon->liste_produits;
+        if (produitIntermediaire == NULL) {
+            // cas où le rayon n'a pas de produit
+            rayon->liste_produits = produit;
+            return 1;
+        }
+        else {
+            // cas où le rayon a au moins 1 produit
+            if (produit->prix == produitIntermediaire->prix){
+                if (!strcmp(produit->designation, produitIntermediaire->designation)){
+                    // cas où le premier produit est identique à celui que l'on souhaite ajouter (on ne s'intéresse pas
+                    // à la quantité mais on estime que deux produits sont identiques s'ils ont le mêm prix et la même
+                    // désignation
+                    return 0;
+                }
+                // cas où le prix du premier produit est le même que le nouveau, on ajoute le nouveau à la suite
+                produit->suivant = produitIntermediaire->suivant;
+                produitIntermediaire->suivant = produit;
+                return 1;
+            }
+
+            else if (produit->prix < produitIntermediaire->prix){
+                // cas où le produit à ajouter doit être situé avant le premier du rayon (prix inférieur)
+                produit->suivant = produitIntermediaire;
+                rayon->liste_produits = produit;
+                return 1;
+            }
+            else{
+                // cas général (après le premier produit du rayon)
+                while ((produitIntermediaire->suivant != NULL) &&
+                        (produit->prix >= produitIntermediaire->suivant->prix)) {
+                    if (produit->prix == produitIntermediaire->suivant->prix) {
+                        if (!strcmp(produit->designation, produitIntermediaire->suivant->designation)) {
+                            // cas où il existe un produit dont le nom est identique (autre que le premier car vérification déjà faite)
+                            return 0;
+                        }
+                        // cas où le prix du produit est le même que le nouveau, on ajoute le nouveau à la suite
+                        produit->suivant = produitIntermediaire->suivant->suivant;
+                        produitIntermediaire->suivant->suivant = produit;
+                        return 1;
+                    }
+                    produitIntermediaire = produitIntermediaire->suivant;
+                }
+                produit->suivant = produitIntermediaire->suivant;
+                produitIntermediaire->suivant = produit;
+                return 1;
+            }
+        }
+    }
+    // Si le rayon n'existe pas, on ne fait rien
+    return 0;
 }
 
 
@@ -124,7 +175,7 @@ int ajouterProduit(T_Rayon *rayon,char *designation, float prix, int quantite) {
  * Affichage de tous les rayons d'un magasin
  ***************************************** */
 void afficherMagasin(T_Magasin *magasin) {
-    // TODO
+
 }
 
 

@@ -32,7 +32,25 @@ int main()
                 char test[5] = "test";
                 T_Magasin* magasin = creerMagasin(test);
                 ajouterRayon(magasin, "rayon 1");
-                printf("rayon : %s", magasin->liste_rayons->nom_rayon);
+                ajouterRayon(magasin, "Bayon 1");
+                ajouterRayon(magasin, "bayon 1");
+                ajouterRayon(magasin, "rbyon 1");
+                ajouterRayon(magasin, "zayon 1");
+                ajouterRayon(magasin, "1zayon 1");
+                T_Rayon* debut= magasin->liste_rayons;
+                printf("Rayons : %s ",debut->nom_rayon);
+                while((debut = debut->suivant)!=NULL)
+                {
+                    printf("-> %s ",debut->nom_rayon);
+                }
+                printf("\n|------------------------------|------------------------------|\n");
+                printf("|Nom                           |Nombre de produits            |");
+                char str[30]="Boissons";
+                char str2[30];
+                itoa(14, str2, 10);
+                printf("\n|------------------------------|------------------------------|\n");
+                printf("|%s|%s|",strncat(str,"                      ", 30),strncat(str2,"                            ",30));
+                printf("\n|------------------------------|------------------------------|\n");
                 break;
             }
             case '2' :
