@@ -11,7 +11,7 @@ int main()
     char choix = '0';
 
     while (choix != '9') {
-        system("cls");
+//        system("cls");
         printf("\n========== MENU UTILISATEUR ==========");
         printf("\n1. Creer un magasin");
         printf("\n2. Ajouter un rayon au magasin");
@@ -28,9 +28,13 @@ int main()
         viderBuffer(); // supprimer de l'entrée standard le retour charriot et les éventuels caractères supplémentaires tapés par l'utilisateur
 
         switch (choix) {
-            case '1' :
+            case '1' : {
+                char test[5] = "test";
+                T_Magasin* magasin = creerMagasin(test);
+                ajouterRayon(magasin, "rayon 1");
+                printf("rayon : %s", magasin->liste_rayons->nom_rayon);
                 break;
-
+            }
             case '2' :
                 break;
 

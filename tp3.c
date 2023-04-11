@@ -70,16 +70,42 @@ int ajouterRayon(T_Magasin *magasin, char *nomRayon) {
     if (magasin != NULL) {
         T_Rayon *rayon = creerRayon(nomRayon);
         T_Rayon *rayonIntermediaire = magasin->liste_rayons;
-        if (rayonIntermediaire == NULL)
+        if (rayonIntermediaire == NULL) {
+            //cas où le magasion n'a pas de rayon
             magasin->liste_rayons = rayon;
-        else
-            rayonIntermediaire = rayonIntermediaire->suivant;
-        while (rayonIntermediaire->suivant != NULL) {
-
+            return 0;
         }
-
-        return 1;
+        else {
+            //cas où le magasin a au moins 1 rayon
+            int cmp = strcmp(rayon->nom_rayon, rayonIntermediaire->nom_rayon);
+            if (cmp == 0){
+                //cas où le premier rayon est identique à celui que l'on souhaite ajouter
+                return 0;
+            }
+            else if (cmp < 0){
+                // cas où le rayon à ajouter doit être situé avant le premier du magasin
+                rayon->suivant = rayonIntermediaire;
+                magasin->liste_rayons = rayon;
+                return 1;
+            }
+            else{
+                //cas général (après le premier rayon du magasin)
+                while ((rayonIntermediaire->suivant != NULL) &&
+                       ((cmp = strcmp(rayon->nom_rayon, rayonIntermediaire->suivant->nom_rayon)) >= 0)) {
+                    rayonIntermediaire = rayonIntermediaire->suivant;
+                    if (!cmp){
+                        //cas où il existe un rayon dont le nom est identique (autre que le premier car vérification déjà faite)
+                        return 0;
+                    }
+                }
+                rayon->suivant = rayonIntermediaire->suivant;
+                rayonIntermediaire->suivant = rayon;
+                return 1;
+            }
+        }
     }
+    //Si le magasin n'existe pas, on ne fait rien
+    return 0;
 }
 
 
