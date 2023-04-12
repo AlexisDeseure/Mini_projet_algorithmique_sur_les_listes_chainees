@@ -31,30 +31,29 @@ int main()
             case '1' : {
                 char test[5] = "test";
                 T_Magasin* magasin = creerMagasin(test);
-                ajouterRayon(magasin, "rayon 1");
-                ajouterRayon(magasin, "Bayon 1");
-                ajouterRayon(magasin, "bayon 1");
-                ajouterRayon(magasin, "rbyon 1");
-                ajouterRayon(magasin, "zayon 1");
-                ajouterRayon(magasin, "1zayon 1");
+                ajouterRayon(magasin, "Boissons");
+                ajouterRayon(magasin, "Yaourts");
+                ajouterRayon(magasin, "Lessives");
+                ajouterRayon(magasin, "Fromages");
+                ajouterRayon(magasin, "Le rayon sympa long qui existe");
+                ajouterRayon(magasin, "Le rayon sympa long qui n'existe pas");
+                ajouterProduit(magasin->liste_rayons->suivant,"comte",(float)5.6,25);
+                ajouterProduit(magasin->liste_rayons->suivant,"gruyere",(float)2.6,5);
                 T_Rayon* debut= magasin->liste_rayons;
                 printf("Rayons : %s ",debut->nom_rayon);
                 while((debut = debut->suivant)!=NULL)
                 {
                     printf("-> %s ",debut->nom_rayon);
                 }
-                printf("\n|------------------------------|------------------------------|\n");
-                printf("|Nom                           |Nombre de produits            |");
-                char str[30]="Boissons";
-                char str2[30];
-                itoa(14, str2, 10);
-                printf("\n|------------------------------|------------------------------|\n");
-                printf("|%s|%s|",strncat(str,"                      ", 30),strncat(str2,"                            ",30));
-                printf("\n|------------------------------|------------------------------|\n");
+                afficherMagasin(magasin);
                 break;
             }
             case '2' :
+            {
+                char *chaine = formatageNom("azertyuiopqsdfghjklmwxcvbn123456789");
+                printf("%sfin",chaine);
                 break;
+            }
 
             case '3' :
                 break;

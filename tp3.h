@@ -29,6 +29,11 @@ T_Produit *creerProduit(char *designation, float prix, int quantite);
 T_Rayon *creerRayon(char *nom);
 T_Magasin *creerMagasin(char *nom);
 
+// Ajout ou suppression de caractères d'une chaine pour atteindre 30
+char* formatageChiffre(int nombre);
+// Ajout ou suppression de caractères d'une chaine créé à partir d'un nombre pour atteindre 30
+char* formatageNom(char* chaine);
+
 // Ajout d'un rayon dans un magasin
 int ajouterRayon(T_Magasin *magasin, char *nomRayon);
 

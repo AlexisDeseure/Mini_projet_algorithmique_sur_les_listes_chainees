@@ -169,22 +169,84 @@ int ajouterProduit(T_Rayon *rayon,char *designation, float prix, int quantite) {
     return 0;
 }
 
+char* formatageNom(char* chaine){
+    char* resultat = (char*) malloc(31 * sizeof(char));
+    memset(resultat, 0, 31);
+    int len = (int)strlen(chaine);
+    if (len > 30){
+        strncpy(resultat, chaine, 27);
+        resultat[27] = '.';
+        resultat[28] = '.';
+        resultat[29] = '.';
+    }
+    else{
+        strncpy(resultat, chaine, len);
+        char espace[31];
+        memset(espace, ' ', 30);
+        espace[30] = '\0';
+        strncat(resultat, espace, 30 - len);
+    }
+    resultat[30] = '\0';
+    return resultat;
+}
 
+char* formatageChiffre(int nombre){
+    int compteur = 0;
+    int temp = nombre;
+    do{
+        temp = temp / 10;
+        compteur++;
+    }while (temp != 0);
+    char* chaine = (char*) malloc((compteur+1) * sizeof(char));
+    snprintf(chaine, compteur+1, "%d", nombre);
+    chaine[compteur] = '\0';
+    return formatageNom(chaine);
+}
 
 /* *****************************************
  * Affichage de tous les rayons d'un magasin
  ***************************************** */
 void afficherMagasin(T_Magasin *magasin) {
-
+    if (magasin != NULL) {
+        T_Rayon *rayonIntermediaire = magasin->liste_rayons;
+        if (rayonIntermediaire != NULL){
+            char* nomFormat;
+            char* nombreFormat;
+            printf("\n%s :", magasin->nom);
+            printf("\n+-------------------------------------------------------------+\n");
+            printf("|Nom                           |Nombre de produits            |");
+            do{
+                printf("\n+------------------------------+------------------------------+\n");
+                T_Produit *produitIntermediaire = rayonIntermediaire->liste_produits;
+                int nombre = 0;
+                if (produitIntermediaire != NULL){
+                    do{
+                        nombre += produitIntermediaire->quantite_en_stock;
+                    }while((produitIntermediaire = produitIntermediaire->suivant) != NULL);
+                }
+                nomFormat = formatageNom(rayonIntermediaire->nom_rayon);
+                nombreFormat = formatageChiffre(nombre);
+                printf("|%s|%s|", nomFormat, nombreFormat);
+            } while ((rayonIntermediaire = rayonIntermediaire->suivant) != NULL);
+            free(nomFormat);
+            free(nombreFormat);
+            printf("\n+-------------------------------------------------------------+\n");
+        }
+        else{
+            printf("\nAttention : ce magasin n'a aucun rayon\n");
+        }
+    }
+    else{
+        printf("\nAttention : ce magasin n'existe pas\n");
+    }
 }
-
 
 
 /* *****************************************
  * Affichage de tous les produits d'un rayon
  ***************************************** */
 void afficherRayon(T_Rayon *rayon) {
-    // TODO
+
 }
 
 
