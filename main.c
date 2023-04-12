@@ -39,18 +39,19 @@ int main()
                 ajouterRayon(magasin, "Le rayon sympa long qui n'existe pas");
                 ajouterProduit(magasin->liste_rayons->suivant,"comte",(float)5.6,25);
                 ajouterProduit(magasin->liste_rayons->suivant,"gruyere",(float)2.6,5);
-                T_Rayon* debut= magasin->liste_rayons;
-                printf("Rayons : %s ",debut->nom_rayon);
-                while((debut = debut->suivant)!=NULL)
-                {
-                    printf("-> %s ",debut->nom_rayon);
-                }
+//                T_Rayon* debut= magasin->liste_rayons;
+//                printf("Rayons : %s ",magasin->liste_rayons->nom_rayon);
+//                while((debut = debut->suivant)!=NULL)
+//                {
+//                    printf("-> %s ",debut->nom_rayon);
+//                }
                 afficherMagasin(magasin);
+                afficherRayon(magasin->liste_rayons->suivant);
                 break;
             }
             case '2' :
             {
-                char *chaine = formatageNom("azertyuiopqsdfghjklmwxcvbn123456789");
+                char *chaine = formatageNom("azertyuiopqsdfghjklmwxcvbn123456789",30);
                 printf("%sfin",chaine);
                 break;
             }

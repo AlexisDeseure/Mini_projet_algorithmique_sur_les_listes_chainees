@@ -169,28 +169,29 @@ int ajouterProduit(T_Rayon *rayon,char *designation, float prix, int quantite) {
     return 0;
 }
 
-char* formatageNom(char* chaine){
-    char* resultat = (char*) malloc(31 * sizeof(char));
-    memset(resultat, 0, 31);
+char* formatageNom(char* chaine, int n){
+    char* resultat = (char*) malloc((n+1) * sizeof(char));
+    memset(resultat, 0, (n+1));
     int len = (int)strlen(chaine);
-    if (len > 30){
-        strncpy(resultat, chaine, 27);
-        resultat[27] = '.';
-        resultat[28] = '.';
-        resultat[29] = '.';
+    if (len > n){
+        strncpy(resultat, chaine, n-3);
+        resultat[n-3] = '.';
+        resultat[n-2] = '.';
+        resultat[n-1] = '.';
     }
     else{
         strncpy(resultat, chaine, len);
-        char espace[31];
-        memset(espace, ' ', 30);
-        espace[30] = '\0';
-        strncat(resultat, espace, 30 - len);
+        char* espace = (char*) malloc((n+1) * sizeof(char));
+        memset(espace, ' ', n);
+        espace[n] = '\0';
+        strncat(resultat, espace, n - len);
+        free(espace);
     }
-    resultat[30] = '\0';
+    resultat[n] = '\0';
     return resultat;
 }
 
-char* formatageChiffre(int nombre){
+char* formatageChiffre(int nombre, int n){
     int compteur = 0;
     int temp = nombre;
     do{
@@ -199,8 +200,21 @@ char* formatageChiffre(int nombre){
     }while (temp != 0);
     char* chaine = (char*) malloc((compteur+1) * sizeof(char));
     snprintf(chaine, compteur+1, "%d", nombre);
-    chaine[compteur] = '\0';
-    return formatageNom(chaine);
+    return formatageNom(chaine, n);
+}
+
+char* formatageFloat(float nombre, int n){
+    int compteur = 0;
+    float temp = nombre;
+    do{
+        temp = temp / 10;
+        compteur++;
+    }while (temp >= 1);
+    // on asssigne compteur+4 emplacement mémoire à la chaine (1 pour le caractère de fin de chaine, 1 pour le "." et 2
+    // pour les chiffres après la virgule
+    char* chaine = (char*) malloc((compteur+4) * sizeof(char));
+    snprintf(chaine, compteur+4, "%.2f", nombre);
+    return formatageNom(chaine, n);
 }
 
 /* *****************************************
@@ -224,8 +238,8 @@ void afficherMagasin(T_Magasin *magasin) {
                         nombre += produitIntermediaire->quantite_en_stock;
                     }while((produitIntermediaire = produitIntermediaire->suivant) != NULL);
                 }
-                nomFormat = formatageNom(rayonIntermediaire->nom_rayon);
-                nombreFormat = formatageChiffre(nombre);
+                nomFormat = formatageNom(rayonIntermediaire->nom_rayon,30);
+                nombreFormat = formatageChiffre(nombre,30);
                 printf("|%s|%s|", nomFormat, nombreFormat);
             } while ((rayonIntermediaire = rayonIntermediaire->suivant) != NULL);
             free(nomFormat);
@@ -246,7 +260,34 @@ void afficherMagasin(T_Magasin *magasin) {
  * Affichage de tous les produits d'un rayon
  ***************************************** */
 void afficherRayon(T_Rayon *rayon) {
-
+    if (rayon != NULL){
+        T_Produit *produitIntermediaire = rayon->liste_produits;
+        if (produitIntermediaire != NULL){
+            char* designationFormat;
+            char* prixFormat;
+            char* quantiteFormat;
+            printf("\n%s :", rayon->nom_rayon);
+            printf("\n+-----------------------------------------------------------------------------+\n");
+            printf("|Designation                   |Prix           |Quantite en stock             |");
+            do{
+                printf("\n+------------------------------+---------------+------------------------------+\n");
+                designationFormat = formatageNom(produitIntermediaire->designation,30);
+                prixFormat = formatageFloat(produitIntermediaire->prix,15);
+                quantiteFormat = formatageChiffre(produitIntermediaire->quantite_en_stock,30);
+                printf("|%s|%s|%s|", designationFormat, prixFormat, quantiteFormat);
+            } while ((produitIntermediaire = produitIntermediaire->suivant) != NULL);
+            free(designationFormat);
+            free(prixFormat);
+            free(quantiteFormat);
+            printf("\n+-----------------------------------------------------------------------------+\n");
+        }
+        else{
+            printf("\nAttention : ce rayon n'a aucun produit\n");
+        }
+    }
+    else{
+        printf("\nAttention : ce rayon n'existe pas\n");
+    }
 }
 
 
@@ -255,7 +296,7 @@ void afficherRayon(T_Rayon *rayon) {
  * Suppression d'un produit dans un rayon
  ************************************** */
 int supprimerProduit(T_Rayon *rayon, char* designation_produit) {
-    // TODO
+
     return 1;
 }
 
@@ -265,7 +306,7 @@ int supprimerProduit(T_Rayon *rayon, char* designation_produit) {
  * Suppression d'un rayon et de tous les produits qu'il contient
  ************************************************************* */
 int supprimerRayon(T_Magasin *magasin, char *nom_rayon) {
-    // TODO
+
     return 1;
 }
 
