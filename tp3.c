@@ -171,53 +171,7 @@ int ajouterProduit(T_Rayon *rayon,char *designation, float prix, int quantite) {
     return 0;
 }
 
-char* formatageNom(char* chaine, int n){
-    char* resultat = (char*) malloc((n+1) * sizeof(char));
-    memset(resultat, 0, (n+1));
-    int len = (int)strlen(chaine);
-    if (len > n){
-        strncpy(resultat, chaine, n-3);
-        resultat[n-3] = '.';
-        resultat[n-2] = '.';
-        resultat[n-1] = '.';
-    }
-    else{
-        strncpy(resultat, chaine, len);
-        char* espace = (char*) malloc((n+1) * sizeof(char));
-        memset(espace, ' ', n);
-        espace[n] = '\0';
-        strncat(resultat, espace, n - len);
-        free(espace);
-    }
-    resultat[n] = '\0';
-    return resultat;
-}
 
-char* formatageChiffre(int nombre, int n){
-    int compteur = 0;
-    int temp = nombre;
-    do{
-        temp = temp / 10;
-        compteur++;
-    }while (temp != 0);
-    char* chaine = (char*) malloc((compteur+1) * sizeof(char));
-    snprintf(chaine, compteur+1, "%d", nombre);
-    return formatageNom(chaine, n);
-}
-
-char* formatageFloat(float nombre, int n){
-    int compteur = 0;
-    float temp = nombre;
-    do{
-        temp = temp / 10;
-        compteur++;
-    }while (temp >= 1);
-    // on asssigne compteur+4 emplacement mémoire à la chaine (1 pour le caractère de fin de chaine, 1 pour le "." et 2
-    // pour les chiffres après la virgule
-    char* chaine = (char*) malloc((compteur+4) * sizeof(char));
-    snprintf(chaine, compteur+4, "%.2f", nombre);
-    return formatageNom(chaine, n);
-}
 
 /* *****************************************
  * Affichage de tous les rayons d'un magasin
@@ -387,4 +341,61 @@ void viderBuffer() {
     while (c != '\n' && c != EOF) {
         c = getchar();
     }
+}
+
+
+
+/* **************************************************
+ * Fonctions pour le formatage du texte des tableaux
+ ************************************************** */
+// cette fonction permet de faire tenir le nom des éléments des tableaux dans n>=3 caractères (en rajoutant des espaces
+// si besoin ou des "..." si le texte est plus long que n
+char* formatageNom(char* chaine, int n){
+    char* resultat = (char*) malloc((n+1) * sizeof(char));
+    memset(resultat, 0, (n+1));
+    int len = (int)strlen(chaine);
+    if (len > n){
+        strncpy(resultat, chaine, n-3);
+        resultat[n-3] = '.';
+        resultat[n-2] = '.';
+        resultat[n-1] = '.';
+    }
+    else{
+        strncpy(resultat, chaine, len);
+        char* espace = (char*) malloc((n+1) * sizeof(char));
+        memset(espace, ' ', n);
+        espace[n] = '\0';
+        strncat(resultat, espace, n - len);
+        free(espace);
+    }
+    resultat[n] = '\0';
+    return resultat;
+}
+
+// cette fonction permet de faire la même chose que formatageNom mais avec en entrée un entier
+char* formatageChiffre(int nombre, int n){
+    int compteur = 0;
+    int temp = nombre;
+    do{
+        temp = temp / 10;
+        compteur++;
+    }while (temp != 0);
+    char* chaine = (char*) malloc((compteur+1) * sizeof(char));
+    snprintf(chaine, compteur+1, "%d", nombre);
+    return formatageNom(chaine, n);
+}
+
+// cette fonction permet de faire la même chose que formatageNom mais avec en entrée un float
+char* formatageFloat(float nombre, int n){
+    int compteur = 0;
+    float temp = nombre;
+    do{
+        temp = temp / 10;
+        compteur++;
+    }while (temp >= 1);
+    // on asssigne compteur+4 emplacement mémoire à la chaine (1 pour le caractère de fin de chaine, 1 pour le "." et 2
+    // pour les chiffres après la virgule
+    char* chaine = (char*) malloc((compteur+4) * sizeof(char));
+    snprintf(chaine, compteur+4, "%.2f", nombre);
+    return formatageNom(chaine, n);
 }
