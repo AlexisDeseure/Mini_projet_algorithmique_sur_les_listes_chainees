@@ -124,19 +124,16 @@ int ajouterProduit(T_Rayon *rayon,char *designation, float prix, int quantite) {
         }
         else {
             // cas où le rayon a au moins 1 produit
-            if (produit->prix == produitIntermediaire->prix){
-                if (!strcmp(produit->designation, produitIntermediaire->designation)){
-                    // cas où le premier produit est identique à celui que l'on souhaite ajouter (on ne s'intéresse pas
-                    // à la quantité mais on estime que deux produits sont identiques s'ils ont le mêm prix et la même
-                    // désignation
-                    return 0;
-                }
+            if (!strcmp(produit->designation, produitIntermediaire->designation)){
+                // cas où le premier produit est identique à celui que l'on souhaite ajouter
+                return 0;
+            }
+            else if (produit->prix == produitIntermediaire->prix){
                 // cas où le prix du premier produit est le même que le nouveau, on ajoute le nouveau à la suite
                 produit->suivant = produitIntermediaire->suivant;
                 produitIntermediaire->suivant = produit;
                 return 1;
             }
-
             else if (produit->prix < produitIntermediaire->prix){
                 // cas où le produit à ajouter doit être situé avant le premier du rayon (prix inférieur)
                 produit->suivant = produitIntermediaire;
@@ -144,14 +141,19 @@ int ajouterProduit(T_Rayon *rayon,char *designation, float prix, int quantite) {
                 return 1;
             }
             else{
+                while (produitIntermediaire->suivant != NULL)
+                {
+                    if (!strcmp(produit->designation, produitIntermediaire->suivant->designation)) {
+                        // cas où il existe un produit dont le nom est identique (autre que le premier car vérification déjà faite)
+                        return 0;
+                    }
+                    produitIntermediaire = produitIntermediaire->suivant;
+                }
+                produitIntermediaire = rayon->liste_produits;
                 // cas général (après le premier produit du rayon)
                 while ((produitIntermediaire->suivant != NULL) &&
                         (produit->prix >= produitIntermediaire->suivant->prix)) {
                     if (produit->prix == produitIntermediaire->suivant->prix) {
-                        if (!strcmp(produit->designation, produitIntermediaire->suivant->designation)) {
-                            // cas où il existe un produit dont le nom est identique (autre que le premier car vérification déjà faite)
-                            return 0;
-                        }
                         // cas où le prix du produit est le même que le nouveau, on ajoute le nouveau à la suite
                         produit->suivant = produitIntermediaire->suivant->suivant;
                         produitIntermediaire->suivant->suivant = produit;
@@ -247,7 +249,7 @@ void afficherMagasin(T_Magasin *magasin) {
             printf("\n+-------------------------------------------------------------+\n");
         }
         else{
-            printf("\nAttention : ce magasin n'a aucun rayon\n");
+            printf("\nAttention : le magasin \"%s\" n'a aucun rayon\n", magasin->nom);
         }
     }
     else{
@@ -282,7 +284,7 @@ void afficherRayon(T_Rayon *rayon) {
             printf("\n+-----------------------------------------------------------------------------+\n");
         }
         else{
-            printf("\nAttention : ce rayon n'a aucun produit\n");
+            printf("\nAttention : le rayon \"%s\" n'a aucun produit\n", rayon->nom_rayon);
         }
     }
     else{
@@ -296,8 +298,29 @@ void afficherRayon(T_Rayon *rayon) {
  * Suppression d'un produit dans un rayon
  ************************************** */
 int supprimerProduit(T_Rayon *rayon, char* designation_produit) {
-
-    return 1;
+    if (rayon == NULL){
+        // si le rayon n'existe pas on ne fait rien
+        return 0;
+    }
+    T_Produit *produitIntermediaire = rayon->liste_produits;
+    T_Produit *produitPrecedent = NULL;
+    while(produitIntermediaire != NULL){
+        if (!strcmp(produitIntermediaire->designation,designation_produit)){
+            // cas où le produit est trouvé
+            if (produitPrecedent == NULL){
+                rayon->liste_produits = produitIntermediaire->suivant;
+            }
+            else{
+                produitPrecedent->suivant = produitIntermediaire->suivant;
+            }
+            free(produitIntermediaire);
+            return 1;
+        }
+        produitPrecedent = produitIntermediaire;
+        produitIntermediaire = produitIntermediaire->suivant;
+    }
+    // cas où le produit n'a pas été trouvé
+    return 0;
 }
 
 
@@ -306,8 +329,33 @@ int supprimerProduit(T_Rayon *rayon, char* designation_produit) {
  * Suppression d'un rayon et de tous les produits qu'il contient
  ************************************************************* */
 int supprimerRayon(T_Magasin *magasin, char *nom_rayon) {
-
-    return 1;
+    if (magasin == NULL){
+        // cas où le magasin n'existe pas
+        return 0;
+    }
+    T_Rayon *rayonIntermediaire = magasin->liste_rayons;
+    T_Rayon *rayonPrecedent = NULL;
+    while(rayonIntermediaire != NULL){
+        if (!strcmp(rayonIntermediaire->nom_rayon,nom_rayon)){
+            // cas où le produit est trouvé
+            if (rayonPrecedent == NULL){
+                magasin->liste_rayons = rayonIntermediaire->suivant;
+            }
+            else{
+                rayonPrecedent->suivant = rayonIntermediaire->suivant;
+            }
+            while(rayonIntermediaire->liste_produits != NULL){
+                // on libère l'espace mémoire de chacun des produits du rayon
+                supprimerProduit(rayonIntermediaire, rayonIntermediaire->liste_produits->designation);
+            }
+            free(rayonIntermediaire);
+            return 1;
+        }
+        rayonPrecedent = rayonIntermediaire;
+        rayonIntermediaire = rayonIntermediaire->suivant;
+    }
+    // cas où le produit n'a pas été trouvé
+    return 0;
 }
 
 

@@ -29,7 +29,7 @@ int main()
 
         switch (choix) {
             case '1' : {
-                char test[5] = "test";
+                char test[7] = "Auchan";
                 T_Magasin* magasin = creerMagasin(test);
                 ajouterRayon(magasin, "Boissons");
                 ajouterRayon(magasin, "Yaourts");
@@ -37,8 +37,15 @@ int main()
                 ajouterRayon(magasin, "Fromages");
                 ajouterRayon(magasin, "Le rayon sympa long qui existe");
                 ajouterRayon(magasin, "Le rayon sympa long qui n'existe pas");
-                ajouterProduit(magasin->liste_rayons->suivant,"comte",(float)5.6,25);
-                ajouterProduit(magasin->liste_rayons->suivant,"gruyere",(float)2.6,5);
+                ajouterProduit(magasin->liste_rayons->suivant,"cammembert",(float)5.6,2);
+                ajouterProduit(magasin->liste_rayons->suivant,"cantal",(float)10,4);
+                ajouterProduit(magasin->liste_rayons->suivant,"raclette",(float)0.65646,33);
+                ajouterProduit(magasin->liste_rayons->suivant,"boursin",(float)3.2,0);
+                ajouterProduit(magasin->liste_rayons->suivant,"mimolette",(float)1.25,7);
+                ajouterProduit(magasin->liste_rayons->suivant,"comte",(float)7,3);
+                ajouterProduit(magasin->liste_rayons->suivant,"gruyere",(float)2.6,1);
+                ajouterProduit(magasin->liste_rayons->suivant,"avene",(float)7,10);
+                ajouterProduit(magasin->liste_rayons->suivant,"gruyere",(float)5,100);
 //                T_Rayon* debut= magasin->liste_rayons;
 //                printf("Rayons : %s ",magasin->liste_rayons->nom_rayon);
 //                while((debut = debut->suivant)!=NULL)
@@ -47,12 +54,16 @@ int main()
 //                }
                 afficherMagasin(magasin);
                 afficherRayon(magasin->liste_rayons->suivant);
+                supprimerProduit(magasin->liste_rayons->suivant,"comte");
+                afficherRayon(magasin->liste_rayons->suivant);
+                supprimerRayon(magasin,"Fromages");
+                supprimerRayon(magasin,"Le rayon sympa long qui existe");
+                afficherMagasin(magasin);
+                afficherRayon(magasin->liste_rayons->suivant);
                 break;
             }
             case '2' :
             {
-                char *chaine = formatageNom("azertyuiopqsdfghjklmwxcvbn123456789",30);
-                printf("%sfin",chaine);
                 break;
             }
 
