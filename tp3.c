@@ -182,7 +182,7 @@ void afficherMagasin(T_Magasin *magasin) {
         if (rayonIntermediaire != NULL){
             char* nomFormat;
             char* nombreFormat;
-            printf("\n%s :", magasin->nom);
+            printf("\nVoici le(s) rayon(s) de %s :", magasin->nom);
             printf("\n+-------------------------------------------------------------+\n");
             printf("|Nom                           |Nombre de produits            |");
             do{
@@ -217,6 +217,7 @@ void afficherMagasin(T_Magasin *magasin) {
  ***************************************** */
 void afficherRayon(T_Rayon *rayon) {
     if (rayon != NULL){
+
         T_Produit *produitIntermediaire = rayon->liste_produits;
         if (produitIntermediaire != NULL){
             char* designationFormat;
@@ -318,7 +319,7 @@ int supprimerRayon(T_Magasin *magasin, char *nom_rayon) {
  * Recherche des produits se situant dans une fourchette de prix entrée par l'utilisateur
  ************************************************************************************** */
 void rechercheProduits(T_Magasin *magasin, float prix_min, float prix_max) {
-    // TODO
+
 }
 
 
@@ -338,12 +339,25 @@ void fusionnerRayons(T_Magasin *magasin) {
 // Vider le buffer (utile quand on utlise des getchar() )
 void viderBuffer() {
     int c = 0;
-    while (c != '\n' && c != EOF) {
+    while (c != '\n' && c != EOF) { // feof(stdin) renvoie une valeur non nulle si le buffer est vide
         c = getchar();
     }
 }
 
-
+// Obtenir le rayon à partir de son nom
+T_Rayon *obtenirRayon(T_Magasin *magasin, char *nom){
+    T_Rayon *rayonIntermediaire = NULL;
+    rayonIntermediaire = magasin->liste_rayons;
+    while (rayonIntermediaire != NULL){
+        // parcourt de la liste chainee des rayons du magasin
+        if (!strcmp(rayonIntermediaire->nom_rayon, nom)){
+            // le rayon est trouvé
+            break;
+        }
+        rayonIntermediaire = rayonIntermediaire->suivant;
+    }
+    return rayonIntermediaire;
+}
 
 /* **************************************************
  * Fonctions pour le formatage du texte des tableaux

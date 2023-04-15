@@ -60,7 +60,8 @@ void rechercheProduits(T_Magasin *magasin, float prix_min, float prix_max);
 // Fusionner deux rayons
 void fusionnerRayons(T_Magasin *magasin);
 
-
+// Renvoie le rayon associé au nom entré
+T_Rayon *obtenirRayon(T_Magasin *magasin, char *nom);
 // UTILS
 void viderBuffer() ;
 

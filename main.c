@@ -9,9 +9,13 @@ int main()
 
     // ============= MENU UTILISATEUR ============= */
     char choix = '0';
-
+    char str[1000]; // initialisation de la chaine de caractères qui contiendra les noms des éléments à ajouter
+    char input[100];
+    char *chaineNonConvertie; // permet de pointer vers la chaîne de caractères non convertie en utilisant strtof ou strtol
+    long int entier = 0; // initialisation du nombre qui contiendra les nombres entier à ajouter (long int car utilisation de strtol)
+    float flottant = 0; // initialisation du nombre qui contiendra les nombres flottants à ajouter
+    T_Rayon *rayon;
     while (choix != '9') {
-//        system("cls");
         printf("\n========== MENU UTILISATEUR ==========");
         printf("\n1. Creer un magasin");
         printf("\n2. Ajouter un rayon au magasin");
@@ -28,69 +32,188 @@ int main()
         viderBuffer(); // supprimer de l'entrée standard le retour charriot et les éventuels caractères supplémentaires tapés par l'utilisateur
 
         switch (choix) {
-            case '1' : {
-                char test[7] = "Auchan";
-                T_Magasin* magasin = creerMagasin(test);
-                ajouterRayon(magasin, "Boissons");
-                ajouterRayon(magasin, "Yaourts");
-                ajouterRayon(magasin, "Lessives");
-                ajouterRayon(magasin, "Fromages");
-                ajouterRayon(magasin, "Le rayon sympa long qui existe");
-                ajouterRayon(magasin, "Le rayon sympa long qui n'existe pas");
-                ajouterProduit(magasin->liste_rayons->suivant,"cammembert",(float)5.6,2);
-                ajouterProduit(magasin->liste_rayons->suivant,"cantal",(float)10,4);
-                ajouterProduit(magasin->liste_rayons->suivant,"raclette",(float)0.65646,33);
-                ajouterProduit(magasin->liste_rayons->suivant,"boursin",(float)3.2,0);
-                ajouterProduit(magasin->liste_rayons->suivant,"mimolette",(float)1.25,7);
-                ajouterProduit(magasin->liste_rayons->suivant,"comte",(float)7,3);
-                ajouterProduit(magasin->liste_rayons->suivant,"gruyere",(float)2.6,1);
-                ajouterProduit(magasin->liste_rayons->suivant,"avene",(float)7,10);
-                ajouterProduit(magasin->liste_rayons->suivant,"gruyere",(float)5,100);
-//                T_Rayon* debut= magasin->liste_rayons;
-//                printf("Rayons : %s ",magasin->liste_rayons->nom_rayon);
-//                while((debut = debut->suivant)!=NULL)
-//                {
-//                    printf("-> %s ",debut->nom_rayon);
-//                }
-                afficherMagasin(magasin);
-                afficherRayon(magasin->liste_rayons->suivant);
-                supprimerProduit(magasin->liste_rayons->suivant,"comte");
-                afficherRayon(magasin->liste_rayons->suivant);
-                supprimerRayon(magasin,"Fromages");
-                supprimerRayon(magasin,"Le rayon sympa long qui existe");
-                afficherMagasin(magasin);
-                afficherRayon(magasin->liste_rayons->suivant);
+            case '1' :
+                if (mon_magasin == NULL){
+                    printf("\nQuel est le nom du magasin que vous souhaitez ajouter au systeme (strictement inferieur a 1000 caracteres)?\n");
+                    fgets(str, 1000, stdin);
+                    str[strcspn(str, "\n")] = '\0';
+                    mon_magasin = creerMagasin(str);
+                    printf("\nCreation effectuee avec succes !\nVotre magasin se nomme : %s\n",str);
+                }
+                else{
+                    printf("\nAttention !! Votre magasin a deja ete cree avec le nom : %s",mon_magasin->nom);
+                    printf("\nSouhaitez-vous changer ce nom ? (y/n)");
+                    choix = getchar();
+                    viderBuffer();
+                    if (choix == 'y'){
+                        printf("\nEntrez le nouveau nom :\n");
+                        fgets(str, 1000, stdin);
+                        str[strcspn(str, "\n")] = '\0';
+                        strcpy(mon_magasin->nom,str);
+                        printf("\nChangement effectue avec succes !\nVotre magasin se nomme desormais: %s\n",str);
+                    }
+                }
+                viderBuffer();
                 break;
-            }
             case '2' :
-            {
+                if (mon_magasin == NULL) {
+                    printf("\nLe magasin n'a pas encore ete cree !\nVeuillez le faire en accedant a la page 1 du Menu puis reessayer\n");
+                    break;
+                }
+                printf("\nQuel est le nom du rayon que vous souhaitez ajouter au magasin (strictement inferieur a 1000 caracteres)?\n");
+                fgets(str, 1000, stdin);// récupère au maximum les 999 caractères écris dans la console et les stocke dans la variable str
+                str[strcspn(str, "\n")] = '\0';// remplace le premier saut de ligne par le caractère de fin
+                // de ligne (strcspn renvoie la longueur de la plus grande sous chaine ne contenant aucun des caractères spécifiés)
+                if (ajouterRayon(mon_magasin,str)){
+                    printf("Rayon %s ajoute avec succes !\n",str);
+                }
+                else{
+                    printf("Une erreur a ete rencontree durant l'ajout du rayon !\n");
+                    printf("Assurez-vous que le rayon que vous souhaitez ajouter n'existe pas deja.\n");
+                }
+                viderBuffer();
                 break;
-            }
 
             case '3' :
+                if (mon_magasin == NULL) {
+                    printf("\nLe magasin n'a pas encore ete cree !\nVeuillez le faire en accedant a la page 1 du Menu puis reessayer\n");
+                    break;
+                }
+                printf("\nEntrez le nom du rayon dans lequel ajouter le produit:");
+                fgets(str, 1000, stdin); // récupère au maximum les 999 caractères écris dans la console et les stocke dans la variable str
+                viderBuffer();
+                str[strcspn(str, "\n")] = '\0'; // remplace le premier saut de ligne par le caractère de fin
+                // de ligne (strcspn renvoie la longueur de la plus grande sous chaine ne contenant aucun des caractères spécifiés)
+                rayon = obtenirRayon(mon_magasin, str);
+                if (rayon == NULL){
+                    // cas où il n'existe aucun rayon portant le même nom que celui entree par l'utilisateur
+                    printf("\nErreur: le rayon n'existe pas\n");
+                    break;
+                }
+                printf("\nQuel est le nom du produit que vous souhaitez ajouter au rayon (strictement inferieur a 1000 caracteres)?\n");
+                fgets(str, 1000, stdin); // récupère au maximum les 999 caractères écris dans la console et les stocke dans la variable str
+                viderBuffer();
+                str[strcspn(str, "\n")] = '\0'; // remplace le premier saut de ligne par le caractère de fin
+                // de ligne (strcspn renvoie la longueur de la plus grande sous chaine ne contenant aucun des caractères spécifiés)
+                printf("\nEntrez le prix du produit:");
+                fgets(input, sizeof(input), stdin);
+                viderBuffer();
+                input[strcspn(input, "\n")] = '\0';
+                flottant = strtof(input, &chaineNonConvertie);
+                if (*chaineNonConvertie != '\0') {
+                    // s'il y a des caracteres autres que des chiffres (ou le "."), la chaine non converie les contiendra
+                    printf("Une erreur de conversion est survenue : assurez vous que les caracteres entres forment bien un nombre valide\n");
+                    break;
+                }
+                printf("\nEntrez le nombre de produits disponibles:");
+                fgets(input, sizeof(input), stdin);
+                viderBuffer();
+                input[strcspn(input, "\n")] = '\0';
+                entier = strtol(input, &chaineNonConvertie,10);
+                if (*chaineNonConvertie != '\0') {
+                    // s'il y a des caracteres autres que des chiffres, la chaine non converie les contiendra
+                    printf("Une erreur de conversion est survenue : assurez vous que les caracteres entres forment bien un nombre valide\n");
+                    break;
+                }
+                if (ajouterProduit(rayon,str,flottant,entier)){
+                    printf("Le produit %s, ayant une valeur de %.2f euros et de quantite %ld, a ete ajoute avec succes dans le rayon %s !\n",str, flottant, entier, rayon->nom_rayon);
+                }
+                else{
+                    printf("Une erreur a ete rencontree durant l'ajout du rayon !\n");
+                    printf("Assurez-vous que le produit \"%s\" que vous souhaitez ajouter n'existe pas deja.\n", str);
+                }
                 break;
 
             case '4' :
+                if (mon_magasin == NULL) {
+                    printf("\nLe magasin n'a pas encore ete cree !\nVeuillez le faire en accedant a la page 1 du Menu puis reessayer\n");
+                    break;
+                }
+                afficherMagasin(mon_magasin);
                 break;
 
             case '5' :
+                if (mon_magasin == NULL) {
+                    printf("\nLe magasin n'a pas encore ete cree !\nVeuillez le faire en accedant a la page 1 du Menu puis reessayer\n");
+                    break;
+                }
+                printf("\nEntrez le nom du rayon a afficher:");
+                fgets(str, 1000, stdin); // récupère au maximum les 999 caractères écris dans la console et les stocke dans la variable str
+                viderBuffer();
+                str[strcspn(str, "\n")] = '\0'; // remplace le premier saut de ligne par le caractère de fin
+                // de ligne (strcspn renvoie la longueur de la plus grande sous chaine ne contenant aucun des caractères spécifiés)
+                rayon = obtenirRayon(mon_magasin, str);
+                if (rayon == NULL){
+                    // cas où il n'existe aucun rayon portant le même nom que celui entree par l'utilisateur
+                    printf("\nErreur: le rayon n'existe pas\n");
+                    break;
+                }
+                afficherRayon(rayon);
                 break;
 
             case '6' :
+                if (mon_magasin == NULL) {
+                    printf("\nLe magasin n'a pas encore ete cree !\nVeuillez le faire en accedant a la page 1 du Menu puis reessayer\n");
+                    break;
+                }
+                printf("\nEntrez le nom du rayon dans lequel se trouve le produit a supprimer:");
+                fgets(str, 1000, stdin); // récupère au maximum les 999 caractères écris dans la console et les stocke dans la variable str
+                viderBuffer();
+                str[strcspn(str, "\n")] = '\0'; // remplace le premier saut de ligne par le caractère de fin
+                // de ligne (strcspn renvoie la longueur de la plus grande sous chaine ne contenant aucun des caractères spécifiés)
+                rayon = obtenirRayon(mon_magasin, str);
+                if (rayon == NULL){
+                    // cas où il n'existe aucun rayon portant le même nom que celui entree par l'utilisateur
+                    printf("\nErreur: le rayon n'existe pas\n");
+                    break;
+                }
+                printf("\nEntrez le nom du produit a supprimer dans le rayon %s:", rayon->nom_rayon);
+                fgets(str, 1000, stdin); // récupère au maximum les 999 caractères écris dans la console et les stocke dans la variable str
+                viderBuffer();
+                str[strcspn(str, "\n")] = '\0'; // remplace le premier saut de ligne par le caractère de fin
+                // de ligne (strcspn renvoie la longueur de la plus grande sous chaine ne contenant aucun des caractères spécifiés)
+                if (supprimerProduit(rayon, str)){
+                    printf("\nLe produit %s du rayon %s a ete supprime avec succes !", str, rayon->nom_rayon);
+                }
+                else{
+                    printf("\nErreur : Le produit n'existe pas !");
+                }
                 break;
 
             case '7' :
-               break;
+                if (mon_magasin == NULL) {
+                    printf("\nLe magasin n'a pas encore ete cree !\nVeuillez le faire en accedant a la page 1 du Menu puis reessayer\n");
+                    break;
+                }
+                printf("\nEntrez le nom du rayon a supprimer:");
+                fgets(str, 1000, stdin); // récupère au maximum les 999 caractères écris dans la console et les stocke dans la variable str
+                viderBuffer();
+                str[strcspn(str, "\n")] = '\0'; // remplace le premier saut de ligne par le caractère de fin
+                // de ligne (strcspn renvoie la longueur de la plus grande sous chaine ne contenant aucun des caractères spécifiés)
+                if (supprimerRayon(mon_magasin, str)){
+                   printf("\nLe rayon %s a ete supprime avec succes !", str);
+                }
+                else{
+                    printf("\nErreur : Le rayon n'existe pas !");
+                }
+                break;
+
+
 
             case '8' :
+                if (mon_magasin == NULL) {
+                    printf("\nLe magasin n'a pas encore ete cree !\nVeuillez le faire en accedant a la page 1 du Menu puis reessayer\n");
+                    break;
+                }
                break;
 
             case '9' :
                 printf("\n========== PROGRAMME TERMINE ==========\n");
+                getchar();
                 break;
 
             default :
-                printf("\n\nERREUR : votre choix n'est valide ! ");
+                printf("\n\nERREUR : votre choix n'est pas valide ! ");
         }
         printf("\n\n\n");
     }
