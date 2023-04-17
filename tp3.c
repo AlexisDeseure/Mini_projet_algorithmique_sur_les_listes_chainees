@@ -452,7 +452,6 @@ void fusionnerRayons(T_Magasin *magasin) {
                 strcpy(produit1->designation, str);
                 strcat(produit1->designation, "-");
                 strcat(produit1->designation, rayon2->nom_rayon);
-                printf("\nmot: %s, len : %d, espace: %d\n",produit1->designation, (int)strlen(produit1->designation),(int)(strlen(str)+strlen(rayon2->nom_rayon)+2));
             }
             produit2 = produit2->suivant;
         }
