@@ -288,6 +288,7 @@ int supprimerProduit(T_Rayon *rayon, char* designation_produit) {
             else{
                 produitPrecedent->suivant = produitIntermediaire->suivant;
             }
+            free(produitIntermediaire->designation);
             free(produitIntermediaire);
             return 1;
         }
@@ -323,6 +324,7 @@ int supprimerRayon(T_Magasin *magasin, char *nom_rayon) {
                 // on libère l'espace mémoire de chacun des produits du rayon
                 supprimerProduit(rayonIntermediaire, rayonIntermediaire->liste_produits->designation);
             }
+            free(rayonIntermediaire->nom_rayon);
             free(rayonIntermediaire);
             return 1;
         }
@@ -406,7 +408,59 @@ void rechercheProduits(T_Magasin *magasin, float prix_min, float prix_max) {
  * Fusionner deux rayons
  ********************* */
 void fusionnerRayons(T_Magasin *magasin) {
-    // TODO
+    char str[1000];
+    T_Rayon *rayon1, *rayon2;
+    T_Produit *produit1;
+    T_Produit *produit2;
+    printf("\nEntrez le nom du premier rayon avec lequel fusionner:");
+    fgets(str, 1000, stdin); // récupère au maximum les 999 caractères écris dans la console et les stocke dans la variable str
+    viderBuffer();
+    str[strcspn(str, "\n")] = '\0';
+    rayon1 = obtenirRayon(magasin, str);
+    if (rayon1 == NULL){
+        // cas où il n'existe aucun rayon portant le même nom que celui entree par l'utilisateur
+        printf("\nErreur: le rayon n'existe pas\n");
+        return;
+    }
+    printf("\nEntrez le nom du deuxieme rayon avec lequel fusionner:");
+    fgets(str, 1000, stdin); // récupère au maximum les 999 caractères écris dans la console et les stocke dans la variable str
+    viderBuffer();
+    str[strcspn(str, "\n")] = '\0';
+    rayon2 = obtenirRayon(magasin, str);
+    if (rayon2 == NULL){
+        // cas où il n'existe aucun rayon portant le même nom que celui entree par l'utilisateur
+        printf("\nErreur: le rayon n'existe pas\n");
+        return;
+    }
+    printf("\nEntrez le nom du nouveau rayon resultant de la fusion:");
+    fgets(str, 1000, stdin); // récupère au maximum les 999 caractères écris dans la console et les stocke dans la variable str
+    viderBuffer();
+    str[strcspn(str, "\n")] = '\0';
+    free(rayon1->nom_rayon);
+    rayon1->nom_rayon = malloc(strlen(str) + 1);
+    strcpy(rayon1->nom_rayon,str);
+    produit1 = rayon2->liste_produits;
+    while (produit1 != NULL){
+        // parcourt du 2e rayon pour ajouter dans le 1er les produits en utilisants la fonction ajouterProduit
+        produit2 = rayon1->liste_produits;
+        while (produit2 != NULL){
+            if (!strcmp(produit2->designation,produit1->designation)){
+                // cas où 2 produits portent le même noms : on rajoute alors "-nom_rayon" à la suite du nom de ce dernier pour pouvoir les distinguer
+                strcpy(str,produit1->designation);
+                free(produit1->designation);
+                produit1->designation = malloc(strlen(str)+strlen(rayon2->nom_rayon)+2);
+                strcpy(produit1->designation, str);
+                strcat(produit1->designation, "-");
+                strcat(produit1->designation, rayon2->nom_rayon);
+                printf("\nmot: %s, len : %d, espace: %d\n",produit1->designation, (int)strlen(produit1->designation),(int)(strlen(str)+strlen(rayon2->nom_rayon)+2));
+            }
+            produit2 = produit2->suivant;
+        }
+        ajouterProduit(rayon1,produit1->designation, produit1->prix, produit1->quantite_en_stock);
+        produit1 = produit1->suivant;
+    }
+    printf("\nLa fusion en un seul rayon \"%s\" est un succes !", rayon1->nom_rayon);
+    supprimerRayon(magasin, rayon2->nom_rayon);
 }
 
 
