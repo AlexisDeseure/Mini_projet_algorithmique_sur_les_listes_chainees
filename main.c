@@ -16,8 +16,6 @@ int main()
     float flottant = 0; // initialisation du nombre qui contiendra les nombres flottants à ajouter
     float flottant2 = 0; // initialisation du nombre qui contiendra les potentiels second nombres flottants à ajouter (prix_min et prix_max)
     T_Rayon *rayon;
-    T_Rayon *inte =NULL;
-    T_Produit *prod = NULL;
     while (choix != '0') {
         printf("\n========== MENU UTILISATEUR ==========");
         printf("\n1. Creer un magasin");
@@ -29,6 +27,7 @@ int main()
         printf("\n7. Supprimer un rayon");
         printf("\n8. Rechercher un produit par prix");
         printf("\n9. Fusionner deux rayons du magasin");
+        printf("\ne. Initialiser un exemple");
         printf("\n0. Quitter");
         printf("\n======================================");
         printf("\n   Votre choix ? ");
@@ -53,6 +52,8 @@ int main()
                         printf("\nEntrez le nouveau nom :\n");
                         fgets(str, 1000, stdin);
                         str[strcspn(str, "\n")] = '\0';
+                        free(mon_magasin->nom);
+                        mon_magasin->nom = malloc(strlen(str) + 1);
                         strcpy(mon_magasin->nom,str);
                         printf("\nChangement effectue avec succes !\nVotre magasin se nomme desormais: %s\n",str);
                     }
@@ -237,11 +238,32 @@ int main()
                break;
 
             case '9' :
+                if (mon_magasin == NULL) {
+                    printf("\nLe magasin n'a pas encore ete cree !\nVeuillez le faire en accedant a la page 1 du Menu puis reessayer\n");
+                    break;
+                }
+                fusionnerRayons(mon_magasin);
+                break;
+
+
+            case '0' :
+                printf("\n========== PROGRAMME TERMINE ==========\n");
+                if (mon_magasin != NULL) {
+                    while(mon_magasin->liste_rayons != NULL){
+                        supprimerRayon(mon_magasin, mon_magasin->liste_rayons->nom_rayon);
+                    }
+                    free(mon_magasin->nom);
+                    //free(mon_magasin);
+                }
+                getchar();
+                break;
+
+            case 'e' :
                 mon_magasin = creerMagasin("t");
-                printf("t %d\n", ajouterRayon(mon_magasin,"test1"));
-                printf("%d\n",ajouterProduit(mon_magasin->liste_rayons,"p1", 5, 52));
-                printf("%d\n",ajouterProduit(mon_magasin->liste_rayons,"p2", 4, 52));
-                printf("%d\n",ajouterProduit(mon_magasin->liste_rayons,"p3", 2, 52));
+                ajouterRayon(mon_magasin,"test1");
+                ajouterProduit(mon_magasin->liste_rayons,"p1", 5, 52);
+                ajouterProduit(mon_magasin->liste_rayons,"p2", 4, 52);
+                ajouterProduit(mon_magasin->liste_rayons,"p3", 2, 52);
                 ajouterRayon(mon_magasin,"test2");
                 ajouterProduit(mon_magasin->liste_rayons->suivant,"p4", 6, 52);
                 ajouterProduit(mon_magasin->liste_rayons->suivant,"p2", (float)3.5, 52);
@@ -250,12 +272,6 @@ int main()
                 ajouterProduit(mon_magasin->liste_rayons->suivant->suivant,"p6", 1, 52);
                 ajouterProduit(mon_magasin->liste_rayons->suivant->suivant,"p2", (float)7.5, 52);
                 ajouterProduit(mon_magasin->liste_rayons->suivant->suivant,"p8", (float)1.8, 52);
-                break;
-
-
-            case '0' :
-                printf("\n========== PROGRAMME TERMINE ==========\n");
-                getchar();
                 break;
 
             default :
