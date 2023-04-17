@@ -343,43 +343,44 @@ void rechercheProduits(T_Magasin *magasin, float prix_min, float prix_max) {
         printf("\nAttention : ce magasin n'existe pas\n");
         return;
     }
-    T_ProduitTrie *listeProduitTrie = NULL;
-    T_ProduitTrie *produitTrieIntermediaire = NULL;
-    T_ProduitTrie *produitTrieIntermediaireParcourt = listeProduitTrie;
-    T_Rayon *rayonIntermediaire = magasin->liste_rayons;
-    T_Produit *produitIntermediaire = NULL;
+    T_ProduitTrie *listeProduitTrie = NULL; // pointeur vers la tête de liste chainée pour l'ensemble des produits correspondants aux critères triés par ordre croissant sur le prix
+    T_ProduitTrie *produitTrieIntermediaire = NULL; // pointeur vers les produits triés créés à partir des produits correspondant aux critères
+    T_ProduitTrie *produitTrieIntermediaireParcourt = NULL; // pointeur pour parcourir la liste des produits triés
+    T_Rayon *rayonIntermediaire = magasin->liste_rayons; // pointeur vers les rayons du magasin
+    T_Produit *produitIntermediaire = NULL; // pointeur pour parcourir les produits d'un rayon
     if (rayonIntermediaire == NULL){
         printf("\nAttention : ce magasin n'a pas encore de rayon\n");
         return;
     }
     while(rayonIntermediaire != NULL){
-
         produitIntermediaire = rayonIntermediaire->liste_produits;
         while(produitIntermediaire != NULL && produitIntermediaire->prix <= prix_max){
             if(produitIntermediaire->prix >= prix_min){
                 produitTrieIntermediaire = creerProduitTrie(produitIntermediaire, rayonIntermediaire);
-                if (produitTrieIntermediaireParcourt == NULL){
+                if (listeProduitTrie == NULL){
                     listeProduitTrie = produitTrieIntermediaire;
-                    break;
+                    produitIntermediaire = produitIntermediaire->suivant;
+                    continue;
                 }
-                if (produitTrieIntermediaire->produit->prix < produitTrieIntermediaireParcourt->produit->prix){
-                    produitTrieIntermediaire->suivant = produitTrieIntermediaireParcourt;
+                if (produitTrieIntermediaire->produit->prix < listeProduitTrie->produit->prix){
+                    produitTrieIntermediaire->suivant = listeProduitTrie;
                     listeProduitTrie = produitTrieIntermediaire;
-                    break;
+                    produitIntermediaire = produitIntermediaire->suivant;
+                    continue;
                 }
-                while(produitTrieIntermediaire->produit->prix >= produitTrieIntermediaireParcourt->suivant->produit->prix){
+                produitTrieIntermediaireParcourt = listeProduitTrie;
+                while(produitTrieIntermediaireParcourt->suivant != NULL && produitTrieIntermediaire->produit->prix >= produitTrieIntermediaireParcourt->suivant->produit->prix){
                     produitTrieIntermediaireParcourt = produitTrieIntermediaireParcourt->suivant;
                 }
                 produitTrieIntermediaire->suivant = produitTrieIntermediaireParcourt->suivant;
                 produitTrieIntermediaireParcourt->suivant = produitTrieIntermediaire;
-                produitTrieIntermediaireParcourt = listeProduitTrie;
             }
             produitIntermediaire = produitIntermediaire->suivant;
         }
         rayonIntermediaire = rayonIntermediaire->suivant;
     }
     if (listeProduitTrie == NULL){
-        printf("\nAttention : ce magasin n'a pas encore de produits\n");
+        printf("\nAttention : aucun produit ne correspond a vos criteres\n");
         return;
     }
     // on affiche maintenant le resultat
