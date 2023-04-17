@@ -4,6 +4,7 @@
 #include "tp3.h"
 
 
+
 /* **********************************
  * Création et initialisation Produit
  ********************************** */
@@ -59,6 +60,25 @@ T_Magasin *creerMagasin(char *nom) {
     }
 
     return nouveauMagasin;
+}
+
+
+
+/* *************************************************************************
+ * Création et initialisation de la structure de Produits pour la question 8
+ ************************************************************************* */
+T_ProduitTrie *creerProduitTrie(T_Produit *produit, T_Rayon *rayon) {
+    T_ProduitTrie *ProduitTrie = NULL;
+
+    ProduitTrie = malloc(sizeof(T_ProduitTrie));
+    if (ProduitTrie != NULL) {
+        // l'allocation mémoire s'est bien passée
+        ProduitTrie->suivant = NULL;
+        ProduitTrie->produit = produit;
+        ProduitTrie->rayon = rayon;
+    }
+
+    return ProduitTrie;
 }
 
 
@@ -292,7 +312,7 @@ int supprimerRayon(T_Magasin *magasin, char *nom_rayon) {
     T_Rayon *rayonPrecedent = NULL;
     while(rayonIntermediaire != NULL){
         if (!strcmp(rayonIntermediaire->nom_rayon,nom_rayon)){
-            // cas où le produit est trouvé
+            // cas où le rayon est trouvé
             if (rayonPrecedent == NULL){
                 magasin->liste_rayons = rayonIntermediaire->suivant;
             }
@@ -319,7 +339,64 @@ int supprimerRayon(T_Magasin *magasin, char *nom_rayon) {
  * Recherche des produits se situant dans une fourchette de prix entrée par l'utilisateur
  ************************************************************************************** */
 void rechercheProduits(T_Magasin *magasin, float prix_min, float prix_max) {
+    if (magasin == NULL){
+        printf("\nAttention : ce magasin n'existe pas\n");
+        return;
+    }
+    T_ProduitTrie *listeProduitTrie = NULL;
+    T_ProduitTrie *produitTrieIntermediaire = NULL;
+    T_ProduitTrie *produitTrieIntermediaireParcourt = listeProduitTrie;
+    T_Rayon *rayonIntermediaire = magasin->liste_rayons;
+    T_Produit *produitIntermediaire = NULL;
+    if (rayonIntermediaire == NULL){
+        printf("\nAttention : ce magasin n'a pas encore de rayon\n");
+        return;
+    }
+    while(rayonIntermediaire != NULL){
 
+        produitIntermediaire = rayonIntermediaire->liste_produits;
+        while(produitIntermediaire != NULL && produitIntermediaire->prix <= prix_max){
+            if(produitIntermediaire->prix >= prix_min){
+                produitTrieIntermediaire = creerProduitTrie(produitIntermediaire, rayonIntermediaire);
+                if (produitTrieIntermediaireParcourt == NULL){
+                    listeProduitTrie = produitTrieIntermediaire;
+                    break;
+                }
+                if (produitTrieIntermediaire->produit->prix < produitTrieIntermediaireParcourt->produit->prix){
+                    produitTrieIntermediaire->suivant = produitTrieIntermediaireParcourt;
+                    listeProduitTrie = produitTrieIntermediaire;
+                    break;
+                }
+                while(produitTrieIntermediaire->produit->prix >= produitTrieIntermediaireParcourt->suivant->produit->prix){
+                    produitTrieIntermediaireParcourt = produitTrieIntermediaireParcourt->suivant;
+                }
+                produitTrieIntermediaire->suivant = produitTrieIntermediaireParcourt->suivant;
+                produitTrieIntermediaireParcourt->suivant = produitTrieIntermediaire;
+                produitTrieIntermediaireParcourt = listeProduitTrie;
+            }
+            produitIntermediaire = produitIntermediaire->suivant;
+        }
+        rayonIntermediaire = rayonIntermediaire->suivant;
+    }
+    if (listeProduitTrie == NULL){
+        printf("\nAttention : ce magasin n'a pas encore de produits\n");
+        return;
+    }
+    // on affiche maintenant le resultat
+    printf("\n+-----------------------------------------------------------------------------------------------------------+\n");
+    printf("|Marque                        |Prix           |Quantite en stock             |Rayon                        |");
+    do{
+        produitTrieIntermediaireParcourt = listeProduitTrie;
+        printf("\n+-----------------------------------------------------------------------------------------------------------+\n");
+        printf("|%s|%s|%s|%s|", formatageNom(produitTrieIntermediaireParcourt->produit->designation,30),
+                                formatageFloat(produitTrieIntermediaireParcourt->produit->prix,15),
+                                formatageChiffre(produitTrieIntermediaireParcourt->produit->quantite_en_stock,30),
+                                formatageNom(produitTrieIntermediaireParcourt->rayon->nom_rayon, 30)
+        );
+        listeProduitTrie = produitTrieIntermediaireParcourt->suivant;
+        free(produitTrieIntermediaireParcourt);
+    }while(listeProduitTrie != NULL);
+    printf("\n+-----------------------------------------------------------------------------------------------------------+\n");
 }
 
 

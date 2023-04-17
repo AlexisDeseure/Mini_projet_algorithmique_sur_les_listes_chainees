@@ -11,7 +11,7 @@ struct Produit {
 typedef struct Produit T_Produit;
 
 struct Rayon {
-    char * nom_rayon;
+    char *nom_rayon;
     T_Produit *liste_produits;
     struct Rayon *suivant;
 };
@@ -23,11 +23,19 @@ struct Magasin {
 };
 typedef struct Magasin T_Magasin;
 
+struct ProduitTrie {
+    T_Produit *produit;
+    struct ProduitTrie *suivant;
+    T_Rayon *rayon;
+};
+typedef struct ProduitTrie T_ProduitTrie;
+
 
 // Création et initialisation des structures
 T_Produit *creerProduit(char *designation, float prix, int quantite);
 T_Rayon *creerRayon(char *nom);
 T_Magasin *creerMagasin(char *nom);
+T_ProduitTrie *creerProduitTrie(T_Produit *produit, T_Rayon *rayon);
 
 // Ajout ou suppression de caractères d'une chaine pour atteindre 30
 char* formatageChiffre(int nombre, int n);

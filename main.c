@@ -8,14 +8,17 @@ int main()
     T_Magasin *mon_magasin = NULL;
 
     // ============= MENU UTILISATEUR ============= */
-    char choix = '0';
+    char choix = 0;
     char str[1000]; // initialisation de la chaine de caractères qui contiendra les noms des éléments à ajouter
     char input[100];
     char *chaineNonConvertie; // permet de pointer vers la chaîne de caractères non convertie en utilisant strtof ou strtol
     long int entier = 0; // initialisation du nombre qui contiendra les nombres entier à ajouter (long int car utilisation de strtol)
     float flottant = 0; // initialisation du nombre qui contiendra les nombres flottants à ajouter
+    float flottant2 = 0; // initialisation du nombre qui contiendra les potentiels second nombres flottants à ajouter (prix_min et prix_max)
     T_Rayon *rayon;
-    while (choix != '9') {
+    T_Rayon *inte =NULL;
+    T_Produit *prod = NULL;
+    while (choix != '0') {
         printf("\n========== MENU UTILISATEUR ==========");
         printf("\n1. Creer un magasin");
         printf("\n2. Ajouter un rayon au magasin");
@@ -25,7 +28,8 @@ int main()
         printf("\n6. Supprimer un produit");
         printf("\n7. Supprimer un rayon");
         printf("\n8. Rechercher un produit par prix");
-        printf("\n9. Quitter");
+        printf("\n9. Fusionner deux rayons du magasin");
+        printf("\n0. Quitter");
         printf("\n======================================");
         printf("\n   Votre choix ? ");
         choix = getchar();
@@ -205,9 +209,51 @@ int main()
                     printf("\nLe magasin n'a pas encore ete cree !\nVeuillez le faire en accedant a la page 1 du Menu puis reessayer\n");
                     break;
                 }
+                printf("\nEntrez le prix minimum du produit:");
+                fgets(input, sizeof(input), stdin);
+                viderBuffer();
+                input[strcspn(input, "\n")] = '\0';
+                flottant = strtof(input, &chaineNonConvertie);
+                if (*chaineNonConvertie != '\0') {
+                    // s'il y a des caracteres autres que des chiffres (ou le "."), la chaine non converie les contiendra
+                    printf("Une erreur de conversion est survenue : assurez vous que les caracteres entres forment bien un nombre valide\n");
+                    break;
+                }
+                printf("\nEntrez le prix maximum du produit:");
+                fgets(input, sizeof(input), stdin);
+                viderBuffer();
+                input[strcspn(input, "\n")] = '\0';
+                flottant2 = strtof(input, &chaineNonConvertie);
+                if (*chaineNonConvertie != '\0') {
+                    // s'il y a des caracteres autres que des chiffres (ou le "."), la chaine non converie les contiendra
+                    printf("Une erreur de conversion est survenue : assurez vous que les caracteres entres forment bien un nombre valide\n");
+                    break;
+                }
+                if(flottant > flottant2){
+                    printf("Erreur: le minimum ne peut etre superieur au maximum !");
+                    break;
+                }
+                rechercheProduits(mon_magasin, flottant, flottant2);
                break;
 
             case '9' :
+                mon_magasin = creerMagasin("t");
+                printf("t %d\n", ajouterRayon(mon_magasin,"test1"));
+                printf("%d\n",ajouterProduit(mon_magasin->liste_rayons,"p1", 5, 52));
+                printf("%d\n",ajouterProduit(mon_magasin->liste_rayons,"p2", 4, 52));
+                printf("%d\n",ajouterProduit(mon_magasin->liste_rayons,"p3", 2, 52));
+                ajouterRayon(mon_magasin,"test2");
+                ajouterProduit(mon_magasin->liste_rayons->suivant,"p4", 6, 52);
+                ajouterProduit(mon_magasin->liste_rayons->suivant,"p2", (float)3.5, 52);
+                ajouterProduit(mon_magasin->liste_rayons->suivant,"p5", (float)1.8, 52);
+                ajouterRayon(mon_magasin,"test3");
+                ajouterProduit(mon_magasin->liste_rayons->suivant->suivant,"p6", 1, 52);
+                ajouterProduit(mon_magasin->liste_rayons->suivant->suivant,"p2", (float)7.5, 52);
+                ajouterProduit(mon_magasin->liste_rayons->suivant->suivant,"p8", (float)1.8, 52);
+                break;
+
+
+            case '0' :
                 printf("\n========== PROGRAMME TERMINE ==========\n");
                 getchar();
                 break;
