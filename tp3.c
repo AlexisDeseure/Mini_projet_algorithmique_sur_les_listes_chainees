@@ -432,13 +432,6 @@ void fusionnerRayons(T_Magasin *magasin) {
         printf("\nErreur: le rayon n'existe pas\n");
         return;
     }
-    printf("\nEntrez le nom du nouveau rayon resultant de la fusion:");
-    fgets(str, 1000, stdin); // récupère au maximum les 999 caractères écris dans la console et les stocke dans la variable str
-    viderBuffer();
-    str[strcspn(str, "\n")] = '\0';
-    free(rayon1->nom_rayon);
-    rayon1->nom_rayon = malloc(strlen(str) + 1);
-    strcpy(rayon1->nom_rayon,str);
     produit1 = rayon2->liste_produits;
     while (produit1 != NULL){
         // parcourt du 2e rayon pour ajouter dans le 1er les produits en utilisants la fonction ajouterProduit
@@ -452,12 +445,25 @@ void fusionnerRayons(T_Magasin *magasin) {
                 strcpy(produit1->designation, str);
                 strcat(produit1->designation, "-");
                 strcat(produit1->designation, rayon2->nom_rayon);
+                strcpy(str, produit2->designation);
+                free(produit2->designation);
+                produit2->designation = malloc(strlen(str)+strlen(rayon1->nom_rayon)+2);
+                strcpy(produit2->designation, str);
+                strcat(produit2->designation, "-");
+                strcat(produit2->designation, rayon1->nom_rayon);
             }
             produit2 = produit2->suivant;
         }
         ajouterProduit(rayon1,produit1->designation, produit1->prix, produit1->quantite_en_stock);
         produit1 = produit1->suivant;
     }
+    printf("\nEntrez le nom du nouveau rayon resultant de la fusion:");
+    fgets(str, 1000, stdin); // récupère au maximum les 999 caractères écris dans la console et les stocke dans la variable str
+    viderBuffer();
+    str[strcspn(str, "\n")] = '\0';
+    free(rayon1->nom_rayon);
+    rayon1->nom_rayon = malloc(strlen(str) + 1);
+    strcpy(rayon1->nom_rayon,str);
     printf("\nLa fusion en un seul rayon \"%s\" est un succes !", rayon1->nom_rayon);
     supprimerRayon(magasin, rayon2->nom_rayon);
 }
