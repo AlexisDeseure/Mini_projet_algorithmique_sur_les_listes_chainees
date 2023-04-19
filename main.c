@@ -259,19 +259,24 @@ int main()
                 break;
 
             case 'e' :
-                mon_magasin = creerMagasin("t");
-                ajouterRayon(mon_magasin,"test1");
-                ajouterProduit(mon_magasin->liste_rayons,"p1", 5, 52);
-                ajouterProduit(mon_magasin->liste_rayons,"p2", 4, 52);
-                ajouterProduit(mon_magasin->liste_rayons,"p3", 2, 52);
-                ajouterRayon(mon_magasin,"test2");
-                ajouterProduit(mon_magasin->liste_rayons->suivant,"p4", 6, 52);
-                ajouterProduit(mon_magasin->liste_rayons->suivant,"p2", (float)3.5, 52);
-                ajouterProduit(mon_magasin->liste_rayons->suivant,"p5", (float)1.8, 52);
-                ajouterRayon(mon_magasin,"test3");
-                ajouterProduit(mon_magasin->liste_rayons->suivant->suivant,"p6", 1, 52);
-                ajouterProduit(mon_magasin->liste_rayons->suivant->suivant,"p2", (float)7.5, 52);
-                ajouterProduit(mon_magasin->liste_rayons->suivant->suivant,"p8", (float)1.8, 52);
+                if (mon_magasin != NULL){
+                    printf("\nLe magasin est deja initialise !\n");
+                    break;
+                }
+                mon_magasin = creerMagasin("Supermarche");
+                ajouterRayon(mon_magasin,"Fruits");
+                ajouterProduit(mon_magasin->liste_rayons,"Pomme", 5, 52);
+                ajouterProduit(mon_magasin->liste_rayons,"Poire", 4, 38);
+                ajouterProduit(mon_magasin->liste_rayons,"Abricot", 2, 25);
+                ajouterRayon(mon_magasin,"Produits laitier");
+                ajouterProduit(mon_magasin->liste_rayons->suivant,"Lait", 6, 5);
+                ajouterProduit(mon_magasin->liste_rayons->suivant,"Fromage", (float)3.5, 10);
+                ajouterProduit(mon_magasin->liste_rayons->suivant,"Yaourt", (float)1.8, 132);
+                ajouterRayon(mon_magasin,"Viandes");
+                ajouterProduit(mon_magasin->liste_rayons->suivant->suivant,"Poulet", 1, 36);
+                ajouterProduit(mon_magasin->liste_rayons->suivant->suivant,"Boeuf", (float)7.5, 24);
+                ajouterProduit(mon_magasin->liste_rayons->suivant->suivant,"Porc", (float)1.8, 18);
+                printf("\nMagasin exemple initialise !\n");
                 break;
 
             default :
