@@ -386,11 +386,11 @@ void rechercheProduits(T_Magasin *magasin, float prix_min, float prix_max) {
         return;
     }
     // on affiche maintenant le resultat
-    printf("\n+-----------------------------------------------------------------------------------------------------------+\n");
-    printf("|Marque                        |Prix           |Quantite en stock             |Rayon                        |");
+    printf("\n+------------------------------------------------------------------------------------------------------------+\n");
+    printf("|Marque                        |Prix           |Quantite en stock             |Rayon                         |");
     do{
         produitTrieIntermediaireParcourt = listeProduitTrie;
-        printf("\n+-----------------------------------------------------------------------------------------------------------+\n");
+        printf("\n+------------------------------------------------------------------------------------------------------------+\n");
         printf("|%s|%s|%s|%s|", formatageNom(produitTrieIntermediaireParcourt->produit->designation,30),
                                 formatageFloat(produitTrieIntermediaireParcourt->produit->prix,15),
                                 formatageChiffre(produitTrieIntermediaireParcourt->produit->quantite_en_stock,30),
@@ -399,7 +399,7 @@ void rechercheProduits(T_Magasin *magasin, float prix_min, float prix_max) {
         listeProduitTrie = produitTrieIntermediaireParcourt->suivant;
         free(produitTrieIntermediaireParcourt);
     }while(listeProduitTrie != NULL);
-    printf("\n+-----------------------------------------------------------------------------------------------------------+\n");
+    printf("\n+------------------------------------------------------------------------------------------------------------+\n");
 }
 
 
@@ -414,7 +414,6 @@ void fusionnerRayons(T_Magasin *magasin) {
     T_Produit *produit2;
     printf("\nEntrez le nom du premier rayon avec lequel fusionner:");
     fgets(str, 1000, stdin); // récupère au maximum les 999 caractères écris dans la console et les stocke dans la variable str
-    viderBuffer();
     str[strcspn(str, "\n")] = '\0';
     rayon1 = obtenirRayon(magasin, str);
     if (rayon1 == NULL){
@@ -424,7 +423,6 @@ void fusionnerRayons(T_Magasin *magasin) {
     }
     printf("\nEntrez le nom du deuxieme rayon avec lequel fusionner:");
     fgets(str, 1000, stdin); // récupère au maximum les 999 caractères écris dans la console et les stocke dans la variable str
-    viderBuffer();
     str[strcspn(str, "\n")] = '\0';
     rayon2 = obtenirRayon(magasin, str);
     if (rayon2 == NULL){
@@ -459,7 +457,6 @@ void fusionnerRayons(T_Magasin *magasin) {
     }
     printf("\nEntrez le nom du nouveau rayon resultant de la fusion:");
     fgets(str, 1000, stdin); // récupère au maximum les 999 caractères écris dans la console et les stocke dans la variable str
-    viderBuffer();
     str[strcspn(str, "\n")] = '\0';
     free(rayon1->nom_rayon);
     rayon1->nom_rayon = malloc(strlen(str) + 1);

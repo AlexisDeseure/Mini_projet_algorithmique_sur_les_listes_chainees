@@ -6,7 +6,6 @@
 int main()
 {
     T_Magasin *mon_magasin = NULL;
-
     // ============= MENU UTILISATEUR ============= */
     char choix = 0;
     char str[1000]; // initialisation de la chaine de caractères qui contiendra les noms des éléments à ajouter
@@ -58,7 +57,6 @@ int main()
                         printf("\nChangement effectue avec succes !\nVotre magasin se nomme desormais: %s\n",str);
                     }
                 }
-                viderBuffer();
                 break;
             case '2' :
                 if (mon_magasin == NULL) {
@@ -76,7 +74,6 @@ int main()
                     printf("Une erreur a ete rencontree durant l'ajout du rayon !\n");
                     printf("Assurez-vous que le rayon que vous souhaitez ajouter n'existe pas deja.\n");
                 }
-                viderBuffer();
                 break;
 
             case '3' :
@@ -86,7 +83,6 @@ int main()
                 }
                 printf("\nEntrez le nom du rayon dans lequel ajouter le produit:");
                 fgets(str, 1000, stdin); // récupère au maximum les 999 caractères écris dans la console et les stocke dans la variable str
-                viderBuffer();
                 str[strcspn(str, "\n")] = '\0'; // remplace le premier saut de ligne par le caractère de fin
                 // de ligne (strcspn renvoie la longueur de la plus grande sous chaine ne contenant aucun des caractères spécifiés)
                 rayon = obtenirRayon(mon_magasin, str);
@@ -97,12 +93,10 @@ int main()
                 }
                 printf("\nQuel est le nom du produit que vous souhaitez ajouter au rayon (strictement inferieur a 1000 caracteres)?\n");
                 fgets(str, 1000, stdin); // récupère au maximum les 999 caractères écris dans la console et les stocke dans la variable str
-                viderBuffer();
                 str[strcspn(str, "\n")] = '\0'; // remplace le premier saut de ligne par le caractère de fin
                 // de ligne (strcspn renvoie la longueur de la plus grande sous chaine ne contenant aucun des caractères spécifiés)
                 printf("\nEntrez le prix du produit:");
                 fgets(input, sizeof(input), stdin);
-                viderBuffer();
                 input[strcspn(input, "\n")] = '\0';
                 flottant = strtof(input, &chaineNonConvertie);
                 if (*chaineNonConvertie != '\0') {
@@ -112,7 +106,6 @@ int main()
                 }
                 printf("\nEntrez le nombre de produits disponibles:");
                 fgets(input, sizeof(input), stdin);
-                viderBuffer();
                 input[strcspn(input, "\n")] = '\0';
                 entier = strtol(input, &chaineNonConvertie,10);
                 if (*chaineNonConvertie != '\0') {
@@ -144,7 +137,6 @@ int main()
                 }
                 printf("\nEntrez le nom du rayon a afficher:");
                 fgets(str, 1000, stdin); // récupère au maximum les 999 caractères écris dans la console et les stocke dans la variable str
-                viderBuffer();
                 str[strcspn(str, "\n")] = '\0'; // remplace le premier saut de ligne par le caractère de fin
                 // de ligne (strcspn renvoie la longueur de la plus grande sous chaine ne contenant aucun des caractères spécifiés)
                 rayon = obtenirRayon(mon_magasin, str);
@@ -163,7 +155,6 @@ int main()
                 }
                 printf("\nEntrez le nom du rayon dans lequel se trouve le produit a supprimer:");
                 fgets(str, 1000, stdin); // récupère au maximum les 999 caractères écris dans la console et les stocke dans la variable str
-                viderBuffer();
                 str[strcspn(str, "\n")] = '\0'; // remplace le premier saut de ligne par le caractère de fin
                 // de ligne (strcspn renvoie la longueur de la plus grande sous chaine ne contenant aucun des caractères spécifiés)
                 rayon = obtenirRayon(mon_magasin, str);
@@ -174,7 +165,6 @@ int main()
                 }
                 printf("\nEntrez le nom du produit a supprimer dans le rayon %s:", rayon->nom_rayon);
                 fgets(str, 1000, stdin); // récupère au maximum les 999 caractères écris dans la console et les stocke dans la variable str
-                viderBuffer();
                 str[strcspn(str, "\n")] = '\0'; // remplace le premier saut de ligne par le caractère de fin
                 // de ligne (strcspn renvoie la longueur de la plus grande sous chaine ne contenant aucun des caractères spécifiés)
                 if (supprimerProduit(rayon, str)){
@@ -192,7 +182,6 @@ int main()
                 }
                 printf("\nEntrez le nom du rayon a supprimer:");
                 fgets(str, 1000, stdin); // récupère au maximum les 999 caractères écris dans la console et les stocke dans la variable str
-                viderBuffer();
                 str[strcspn(str, "\n")] = '\0'; // remplace le premier saut de ligne par le caractère de fin
                 // de ligne (strcspn renvoie la longueur de la plus grande sous chaine ne contenant aucun des caractères spécifiés)
                 if (supprimerRayon(mon_magasin, str)){
@@ -212,7 +201,6 @@ int main()
                 }
                 printf("\nEntrez le prix minimum du produit:");
                 fgets(input, sizeof(input), stdin);
-                viderBuffer();
                 input[strcspn(input, "\n")] = '\0';
                 flottant = strtof(input, &chaineNonConvertie);
                 if (*chaineNonConvertie != '\0') {
@@ -222,7 +210,6 @@ int main()
                 }
                 printf("\nEntrez le prix maximum du produit:");
                 fgets(input, sizeof(input), stdin);
-                viderBuffer();
                 input[strcspn(input, "\n")] = '\0';
                 flottant2 = strtof(input, &chaineNonConvertie);
                 if (*chaineNonConvertie != '\0') {
