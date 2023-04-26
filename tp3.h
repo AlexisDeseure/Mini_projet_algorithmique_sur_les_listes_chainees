@@ -37,11 +37,11 @@ T_Rayon *creerRayon(char *nom);
 T_Magasin *creerMagasin(char *nom);
 T_ProduitTrie *creerProduitTrie(T_Produit *produit, T_Rayon *rayon);
 
-// Ajout ou suppression de caractères d'une chaine pour atteindre 30
-char* formatageChiffre(int nombre, int n);
-// Ajout ou suppression de caractères d'une chaine créé à partir d'un entier pour atteindre 30
+// Ajout (d'espaces) ou suppression de caractères d'une chaine pour atteindre n caractères
 char* formatageNom(char* chaine, int n);
-// Ajout ou suppression de caractères d'une chaine créé à partir d'un float pour atteindre 30
+// Ajout (d'espaces) ou suppression de caractères d'une chaine créé à partir d'un entier pour atteindre n caractères
+char* formatageChiffre(int nombre, int n);
+// Ajout (d'espaces) ou suppression de caractères d'une chaine créé à partir d'un float pour atteindre n caractères
 char* formatageFloat(float nombre, int n);
 
 // Ajout d'un rayon dans un magasin

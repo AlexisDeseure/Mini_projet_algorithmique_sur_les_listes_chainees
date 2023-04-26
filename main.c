@@ -240,7 +240,7 @@ int main()
                         supprimerRayon(mon_magasin, mon_magasin->liste_rayons->nom_rayon);
                     }
                     free(mon_magasin->nom);
-                    //free(mon_magasin);
+                    free(mon_magasin);
                 }
                 getchar();
                 break;

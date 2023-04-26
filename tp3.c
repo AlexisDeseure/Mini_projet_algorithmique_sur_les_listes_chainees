@@ -525,9 +525,11 @@ char* formatageChiffre(int nombre, int n){
     int compteur = 0;
     int temp = nombre;
     do{
+        //on compte le nombre de chiffre dans le nombre entier
         temp = temp / 10;
         compteur++;
     }while (temp != 0);
+    //attribution d'un espace mémoire pour avoir la place de convertir le nombre en chaine de caractères
     char* chaine = (char*) malloc((compteur+1) * sizeof(char));
     snprintf(chaine, compteur+1, "%d", nombre);
     return formatageNom(chaine, n);
