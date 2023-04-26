@@ -358,16 +358,20 @@ void rechercheProduits(T_Magasin *magasin, float prix_min, float prix_max) {
         return;
     }
     while(rayonIntermediaire != NULL){
+        // parcourt des rayons
         produitIntermediaire = rayonIntermediaire->liste_produits;
         while(produitIntermediaire != NULL && produitIntermediaire->prix <= prix_max){
+            // parcourt des produits respectant la conditions sur le prix
             if(produitIntermediaire->prix >= prix_min){
                 produitTrieIntermediaire = creerProduitTrie(produitIntermediaire, rayonIntermediaire);
                 if (listeProduitTrie == NULL){
+                    // cas où il n'y a pas d'élément dans la liste de tous les produits triés
                     listeProduitTrie = produitTrieIntermediaire;
                     produitIntermediaire = produitIntermediaire->suivant;
                     continue;
                 }
                 if (produitTrieIntermediaire->produit->prix < listeProduitTrie->produit->prix){
+                    // cas où le prix du produit à ajouter dans la liste triée est inférieur à celui du premier produit de la liste
                     produitTrieIntermediaire->suivant = listeProduitTrie;
                     listeProduitTrie = produitTrieIntermediaire;
                     produitIntermediaire = produitIntermediaire->suivant;
@@ -375,6 +379,7 @@ void rechercheProduits(T_Magasin *magasin, float prix_min, float prix_max) {
                 }
                 produitTrieIntermediaireParcourt = listeProduitTrie;
                 while(produitTrieIntermediaireParcourt->suivant != NULL && produitTrieIntermediaire->produit->prix >= produitTrieIntermediaireParcourt->suivant->produit->prix){
+                    // cas général : on parcourt la liste triée jusqu'à que la condition est remplie pour ajouter le produit dans la liste triée
                     produitTrieIntermediaireParcourt = produitTrieIntermediaireParcourt->suivant;
                 }
                 produitTrieIntermediaire->suivant = produitTrieIntermediaireParcourt->suivant;
