@@ -311,6 +311,7 @@ int supprimerRayon(T_Magasin *magasin, char *nom_rayon) {
     }
     T_Rayon *rayonIntermediaire = magasin->liste_rayons;
     T_Rayon *rayonPrecedent = NULL;
+    T_Produit *produitIntermediaire = NULL;
     while(rayonIntermediaire != NULL){
         if (!strcmp(rayonIntermediaire->nom_rayon,nom_rayon)){
             // cas où le rayon est trouvé
@@ -322,7 +323,9 @@ int supprimerRayon(T_Magasin *magasin, char *nom_rayon) {
             }
             while(rayonIntermediaire->liste_produits != NULL){
                 // on libère l'espace mémoire de chacun des produits du rayon
-                supprimerProduit(rayonIntermediaire, rayonIntermediaire->liste_produits->designation);
+                produitIntermediaire = rayonIntermediaire->liste_produits;
+                rayonIntermediaire->liste_produits = rayonIntermediaire->liste_produits->suivant;
+                free(produitIntermediaire);
             }
             free(rayonIntermediaire->nom_rayon);
             free(rayonIntermediaire);
